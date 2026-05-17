@@ -1,0 +1,35 @@
+name: RetailFlow Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install faker requests python-dotenv pytest pydantic
+
+      - name: Run tests before deploy
+        run: pytest tests/ -v --tb=short
+
+      - name: Deploy to Fabric Dev workspace
+        run: |
+          echo "Deploying to Fabric Dev workspace..."
+          echo "Workspace: ${{ vars.FABRIC_WORKSPACE_ID || 'not-configured-yet' }}"
+          echo "Deploy step will be fully wired in Phase 7 (CI/CD phase)"
+          echo "Deploy placeholder complete"
