@@ -1,0 +1,44 @@
+name: RetailFlow CI
+
+on:
+  push:
+    branches: [ main, dev, feature/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install faker requests python-dotenv pytest pydantic
+
+      - name: Run data generator tests
+        run: pytest tests/ -v --tb=short
+
+      - name: Verify generators produce output
+        run: |
+          python3 data_sources/generators/generate_sales.py
+          python3 data_sources/generators/generate_inventory.py
+          python3 data_sources/generators/generate_customers.py
+          python3 data_sources/generators/weather_api_client.py
+          echo "All generators ran successfully"
