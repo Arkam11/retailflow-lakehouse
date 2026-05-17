@@ -1,0 +1,190 @@
+{
+  "dq_rule_sets": [
+    {
+      "dq_rules_id": "DQ-001",
+      "source_name": "ecommerce_oms",
+      "description": "Sales orders data quality rules",
+      "rules": [
+        {
+          "rule_id": "DQ-001-001",
+          "rule_name": "order_id_not_null",
+          "rule_type": "not_null",
+          "column": "order_id",
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-001-002",
+          "rule_name": "total_amount_positive",
+          "rule_type": "range_check",
+          "column": "total_amount",
+          "min_value": 0.01,
+          "max_value": 999999.99,
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-001-003",
+          "rule_name": "order_status_valid",
+          "rule_type": "allowed_values",
+          "column": "order_status",
+          "allowed_values": ["pending","confirmed","shipped","delivered","cancelled","returned"],
+          "severity": "warning",
+          "action_on_fail": "flag"
+        },
+        {
+          "rule_id": "DQ-001-004",
+          "rule_name": "customer_id_not_null",
+          "rule_type": "not_null",
+          "column": "customer_id",
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-001-005",
+          "rule_name": "order_date_not_future",
+          "rule_type": "date_check",
+          "column": "order_date",
+          "check": "not_future",
+          "severity": "warning",
+          "action_on_fail": "flag"
+        }
+      ]
+    },
+    {
+      "dq_rules_id": "DQ-002",
+      "source_name": "warehouse_wms",
+      "description": "Inventory snapshot data quality rules",
+      "rules": [
+        {
+          "rule_id": "DQ-002-001",
+          "rule_name": "warehouse_id_not_null",
+          "rule_type": "not_null",
+          "column": "warehouse_id",
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-002-002",
+          "rule_name": "stock_quantity_non_negative",
+          "rule_type": "range_check",
+          "column": "stock_quantity",
+          "min_value": 0,
+          "max_value": 999999,
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-002-003",
+          "rule_name": "reorder_flag_valid",
+          "rule_type": "allowed_values",
+          "column": "reorder_flag",
+          "allowed_values": ["Y", "N"],
+          "severity": "warning",
+          "action_on_fail": "flag"
+        }
+      ]
+    },
+    {
+      "dq_rules_id": "DQ-003",
+      "source_name": "crm_database",
+      "description": "Customer data quality rules",
+      "rules": [
+        {
+          "rule_id": "DQ-003-001",
+          "rule_name": "customer_id_not_null",
+          "rule_type": "not_null",
+          "column": "customer_id",
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-003-002",
+          "rule_name": "email_not_null",
+          "rule_type": "not_null",
+          "column": "email",
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-003-003",
+          "rule_name": "customer_tier_valid",
+          "rule_type": "allowed_values",
+          "column": "customer_tier",
+          "allowed_values": ["Bronze", "Silver", "Gold", "Platinum"],
+          "severity": "warning",
+          "action_on_fail": "flag"
+        },
+        {
+          "rule_id": "DQ-003-004",
+          "rule_name": "lifetime_spend_non_negative",
+          "rule_type": "range_check",
+          "column": "lifetime_spend",
+          "min_value": 0,
+          "max_value": 9999999,
+          "severity": "warning",
+          "action_on_fail": "flag"
+        }
+      ]
+    },
+    {
+      "dq_rules_id": "DQ-004",
+      "source_name": "weather_service",
+      "description": "Weather data quality rules",
+      "rules": [
+        {
+          "rule_id": "DQ-004-001",
+          "rule_name": "city_not_null",
+          "rule_type": "not_null",
+          "column": "city",
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-004-002",
+          "rule_name": "temperature_realistic",
+          "rule_type": "range_check",
+          "column": "temp_celsius",
+          "min_value": -60,
+          "max_value": 60,
+          "severity": "warning",
+          "action_on_fail": "flag"
+        }
+      ]
+    },
+    {
+      "dq_rules_id": "DQ-005",
+      "source_name": "order_events_stream",
+      "description": "Streaming order events data quality rules",
+      "rules": [
+        {
+          "rule_id": "DQ-005-001",
+          "rule_name": "event_id_not_null",
+          "rule_type": "not_null",
+          "column": "event_id",
+          "severity": "critical",
+          "action_on_fail": "drop"
+        },
+        {
+          "rule_id": "DQ-005-002",
+          "rule_name": "event_type_valid",
+          "rule_type": "allowed_values",
+          "column": "event_type",
+          "allowed_values": ["order_placed","payment_processed","order_confirmed","order_shipped","order_delivered","order_cancelled","return_initiated"],
+          "severity": "critical",
+          "action_on_fail": "quarantine"
+        },
+        {
+          "rule_id": "DQ-005-003",
+          "rule_name": "total_amount_positive",
+          "rule_type": "range_check",
+          "column": "total_amount",
+          "min_value": 0.01,
+          "max_value": 999999.99,
+          "severity": "warning",
+          "action_on_fail": "flag"
+        }
+      ]
+    }
+  ]
+}
